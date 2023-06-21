@@ -348,11 +348,14 @@ const populateStatHistogram = (stat) => {
     let xAxisGroup = svg.append('g');
     let yAxisGroup = svg.append('g');
 
-
     let historgramOptions = document.querySelector('#histogram_options');
+
+    historgramOptions.value = 'Accuracy';
     historgramOptions.onchange = () => drawHistogram(historgramOptions.value);
 
     const drawHistogram = (stat) => {
+        clearHistogramPlayers();
+        
         let filteredStats = getFiltedStatList(stat);
 
         let xMax = Math.ceil(d3.max(filteredStats, d => d.value));
@@ -397,6 +400,7 @@ const populateStatHistogram = (stat) => {
                         .attr('width', d => Math.max(xScale(d.x1) - xScale(d.x0) - 1, 0))
                         .attr('height', 0)
                         .style('fill', '#69b3a2')
+                        .on('mouseover', (m, d) => displayPlayers(d))
                         .transition()
                         .duration(1000)
                         .attr('y', d => yScale(d.length))
@@ -405,6 +409,30 @@ const populateStatHistogram = (stat) => {
             );
     }
 
+    const displayPlayers = (players) => {
+        let playerlist = document.querySelector("#histogram_playerlist");
+        clearHistogramPlayers();
+
+        players.forEach(player => {
+            let playerDOM = document.createElement('div');
+
+            let summery = playerSummeries.find(p => p.steamid === player.steamid);
+            let icon = summery.avatar;
+            let name = summery.personaname;
+            let stat = Math.round(player.value * 100) / 100;
+
+            playerDOM.innerHTML = newPlayerHistogramElement(icon, name, stat);
+
+            playerlist.append(playerDOM);
+        })
+    }
+
+    const clearHistogramPlayers = () => {
+        let playerlist = document.querySelector("#histogram_playerlist");
+        while (playerlist.firstChild)
+            playerlist.removeChild(playerlist.firstChild);
+    }
+    
     drawHistogram(stat);
 }
 
@@ -440,6 +468,18 @@ const getPlayerStat = (playerStats, statName) => {
         value = parseInt(stat.value);
 
     return value;
+}
+
+const newPlayerHistogramElement = (icon, name, stat) => {
+    name = name.replaceAll('<', '&lt;');
+    name = name.replaceAll('>', '&gt;');
+
+    return `
+    <div class="row">
+        <div class="one columns"><img src="${icon}" alt="username"></div>
+        <div class="nine columns">${name}</div>
+        <div class="two columns">${stat}</div>
+    </div>`
 }
 
 window.onload = init;
