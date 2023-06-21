@@ -252,6 +252,10 @@ const displayDataView = async (ip) => {
     playerSummeries = await retrievePlayerSummeries(ip);
     playerStats = await retrievePlayerStats(ip);
 
+    console.dir(playerSummeries);
+
+    playerSummeries = playerSummeries.filter(p => p.communityvisibilitystate !== 2);
+
     playerStats.sort((a, b) => b.playtime - a.playtime);
     playerSummeries.sort((a, b) => playerStats.find(p => p.steamID === b.steamid).playtime - playerStats.find(p => p.steamID === a.steamid).playtime);
 
@@ -355,7 +359,7 @@ const populateStatHistogram = (stat) => {
 
     const drawHistogram = (stat) => {
         clearHistogramPlayers();
-        
+
         let filteredStats = getFiltedStatList(stat);
 
         let xMax = Math.ceil(d3.max(filteredStats, d => d.value));
@@ -432,7 +436,7 @@ const populateStatHistogram = (stat) => {
         while (playerlist.firstChild)
             playerlist.removeChild(playerlist.firstChild);
     }
-    
+
     drawHistogram(stat);
 }
 
