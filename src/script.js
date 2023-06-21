@@ -1,5 +1,5 @@
 //const base_url = "https://localhost:3000";
-const base_url = "https://67.255.192.87:3000";
+const base_url = "https://aaserverstats-df8905e9512c.herokuapp.com";
 
 let serverView, playerView, dataView;
 
