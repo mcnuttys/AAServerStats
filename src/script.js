@@ -1,5 +1,5 @@
-//const base_url = "http://localhost:3000";
-const base_url = "http://67.255.192.87:3000";
+//const base_url = "https://localhost:3000";
+const base_url = "https://67.255.192.87:3000";
 
 let serverView, playerView, dataView;
 
