@@ -101,13 +101,13 @@ const clearServerList = () => {
 
 const retrieveServerList = async () => {
     servers = [];
-    var serverlistResponse = await fetch(`${base_url}/serverlist`);
+    let serverlistResponse = await fetch(`${base_url}/serverlist`);
     servers = await serverlistResponse.json();
 }
 
 const populateServerList = () => {
     servers.forEach(server => {
-        var newLine = document.createElement('div');
+        let newLine = document.createElement('div');
         newLine.innerHTML = newServerElement(server.ip, server.name, server.map, server.players, server.maxPlayers);
 
         serverListHolder.appendChild(newLine);
@@ -185,7 +185,7 @@ const retrieveServerPlayerList = async (ip) => {
 
 const populatePlayerLists = (players) => {
     players.forEach(player => {
-        var newLine = document.createElement('div');
+        let newLine = document.createElement('div');
 
         if (player.team === '0' || player.team === '1') {
             if (player.steamid === 0)
@@ -255,23 +255,46 @@ const displayDataView = async (ip) => {
     playerStats.sort((a, b) => b.playtime - a.playtime);
     playerSummeries.sort((a, b) => playerStats.find(p => p.steamID === b.steamid).playtime - playerStats.find(p => p.steamID === a.steamid).playtime);
 
-    clearPlayerSummeriesList();
-    populatePlayerSummeries();
+    //console.dir(playerStats);
+    //console.dir(playerSummeries);
+
+    //let data = JSON.stringify(playerStats);
+    //let type = "application/json", name = 'stats.json';
+    //
+    //let blob = new Blob([data], { type });
+    //let url = window.URL.createObjectURL(blob);
+    //
+    //console.dir("Downlaod");
+    //let link = document.createElement('a');
+    //link.downlaod = name;
+    //link.href = url;
+    //link.click();
+    //
+    //window.URL.revokeObjectURL(url);
 
     dataLoader.className = "hidden";
     dataHolder.className = "";
+
+    clearPlayerSummeriesList();
+    populatePlayerSummeries();
+
+    let historgramOptions = document.querySelector('#histogram_options');
+    historgramOptions.onchange = () => {
+        populateStatHistogram(historgramOptions.value);
+    }
+    populateStatHistogram('Accuracy');
 }
 
 const retrievePlayerSummeries = async (ip) => {
     let playerSummeriesResponse = await fetch(`${base_url}/playersummaries?serverip=${ip}`);
-    var playerSummeries = await playerSummeriesResponse.json();
+    let playerSummeries = await playerSummeriesResponse.json();
     playerSummeries = playerSummeries.players;
     return playerSummeries;
 }
 
 const retrievePlayerStats = async (ip) => {
     let playerStatsResponse = await fetch(`${base_url}/playerstats?serverip=${ip}`);
-    var stats = await playerStatsResponse.json();
+    let stats = await playerStatsResponse.json();
     stats = stats.map(s => s.playerstats);
     return await stats;
 }
@@ -284,10 +307,10 @@ const clearPlayerSummeriesList = () => {
 
 const populatePlayerSummeries = () => {
     playerSummeries.forEach(player => {
-        var stats = playerStats.find(p => p.steamID === player.steamid)
-        var icon = player.avatar;
-        var name = player.personaname;
-        var playtime = stats.playtime;
+        let stats = playerStats.find(p => p.steamID === player.steamid)
+        let icon = player.avatar;
+        let name = player.personaname;
+        let playtime = stats.playtime;
         playtime = Math.round((parseInt(playtime) / 60)).toString();
 
         let newLine = document.createElement('div');
@@ -301,13 +324,102 @@ const newPlayerSummeryElement = (icon, steamprofileURL, name, playtime) => {
     name = name.replaceAll('<', '&lt;');
     name = name.replaceAll('>', '&gt;');
     playtime = playtime <= 0 ? '???' : `${playtime} hours`;
-    
+
     return `
     <div class="row player_summary">
         <div class="one columns"><img src="${icon}" alt="username"></div>
         <div class="nine columns"><a href="${steamprofileURL}" target="_blank">${name}</a></div>
         <div class="two columns">${playtime}</div>
     </div>`
+}
+
+const populateStatHistogram = (stat) => {
+    let filteredStats = getFiltedStatList(stat);
+
+    let region = document.querySelector('#histogram_target');
+    region.removeChild(region.firstChild);
+
+    let margin = { top: 10, right: 30, bottom: 30, left: 40 };
+    let width = region.offsetWidth - margin.left - margin.right;
+    let height = 400 - margin.top - margin.bottom;
+
+    let svg = d3.select('#histogram_target')
+        .append('svg')
+        .attr('width', width + margin.left + margin.right)
+        .attr('height', height + margin.top + margin.bottom)
+        .append('g')
+        .attr('transform', `translate(${margin.left}, ${margin.top})`);
+
+    let xMax = Math.ceil(d3.max(filteredStats, d => d.value));
+    let xScale = d3.scaleLinear()
+        .domain([0, xMax])
+        .range([0, width]);
+    svg.append('g')
+        .attr('transform', `translate(0, ${height})`)
+        .call(d3.axisBottom(xScale));
+
+    let histogram = d3.histogram()
+        .value(d => d.value)
+        .domain(xScale.domain())
+        .thresholds(xScale.ticks(10));
+
+    let bins = histogram(filteredStats);
+
+    let yMax = d3.max(bins, d => d.length);
+    let yScale = d3.scaleLinear()
+        .range([height, 0])
+        .domain([0, yMax])
+
+    svg.append('g')
+        .call(
+            d3.axisLeft(yScale)
+                .ticks(yMax)
+                .tickFormat(d3.format('d'))
+        );
+
+    svg.selectAll('rect')
+        .data(bins)
+        .enter()
+        .append("rect")
+        .attr("x", 1)
+        .attr('transform', d => `translate(${xScale(d.x0)}, ${yScale(d.length)})`)
+        .attr('width', d => xScale(d.x1) - xScale(d.x0))
+        .attr('height', d => height - yScale(d.length))
+        .style('fill', '#69b3a2');
+}
+
+const histogramStats = {
+    'Accuracy': (playerStats) => {
+        return getPlayerStat(playerStats, 'TotalHits') / getPlayerStat(playerStats, 'TotalShots');
+    },
+    'KD': (playerStats) => {
+        return getPlayerStat(playerStats, 'EnemyNeutralized') / getPlayerStat(playerStats, 'TimesNeutralized');
+    },
+    'MeleeKills': (playerStats) => {
+        return getPlayerStat(playerStats, 'MeleeKills');
+    },
+}
+
+const getFiltedStatList = (stat) => {
+    console.dir("Get Stats for: " + stat)
+    let filteredStats = playerStats.map(p => {
+        let steamid = p.steamID;
+        let value = histogramStats[stat](p);
+
+        return { steamid, stat, value }
+    });
+
+    return filteredStats;
+}
+
+const getPlayerStat = (playerStats, statName) => {
+    let stat = playerStats.stats.find(s => s.name === statName);
+    
+    let value = 0;
+    if (stat !== undefined)
+        value = parseInt(stat.value);
+    
+    return value;
 }
 
 window.onload = init;

@@ -8,6 +8,8 @@
     <link rel="stylesheet" href="css/normalize.css">
     <link rel="stylesheet" href="css/skeleton.css">
     <link rel="icon" type="image/png" href="./src/images/favicon.png?">
+
+    <script src="https://d3js.org/d3.v7.js"></script>
 </head>
 
 <body>
@@ -94,14 +96,28 @@
                     </div>
                     <div id="data_player_list" class="container">
                     </div>
-                    <p>If your stats are not visible and you want your stats to be visible, set your steam profile to
-                        public!</p>
+                    <div class="center_content">
+                        <h5>Data Graphs</h5>
+                    </div>
+                    <div class="container">
+                        <label for="histogram_options">Histogram Options: </label>
+                        <select id="histogram_options" name="histogram_options">
+                            <option value="Accuracy">Accuracy</option>
+                            <option value="KD">K/D</option>
+                            <option value="MeleeKills">Melee Kills</option>
+                        </select>
+                    </div>
+                    <div id="histogram_target" class="container">
+                    </div>
                 </div>
-                <div class="loader_holder">
-                    <div id="data_loader" class="loader"></div>
-                </div>
+                <p>If your stats are not visible and you want your stats to be visible, set your steam profile to
+                    public!</p>
+            </div>
+            <div class="loader_holder">
+                <div id="data_loader" class="loader"></div>
             </div>
         </div>
+    </div>
     </div>
     <script src="./src/script.js"></script>
 </body>

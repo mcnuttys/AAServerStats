@@ -151,10 +151,13 @@ body {
     text-align: right;
 }
 
+#data_target {
+    display: block;
+}
+
 .center_content {
     display: flex;
     justify-content: center;
-    text-align: center;
 }
 
 .loader_holder {
