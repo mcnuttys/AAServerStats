@@ -278,10 +278,6 @@ const displayDataView = async (ip) => {
     clearPlayerSummeriesList();
     populatePlayerSummeries();
 
-    let historgramOptions = document.querySelector('#histogram_options');
-    historgramOptions.onchange = () => {
-        populateStatHistogram(historgramOptions.value);
-    }
     populateStatHistogram('Accuracy');
 }
 
@@ -334,8 +330,6 @@ const newPlayerSummeryElement = (icon, steamprofileURL, name, playtime) => {
 }
 
 const populateStatHistogram = (stat) => {
-    let filteredStats = getFiltedStatList(stat);
-
     let region = document.querySelector('#histogram_target');
     region.removeChild(region.firstChild);
 
@@ -350,42 +344,68 @@ const populateStatHistogram = (stat) => {
         .append('g')
         .attr('transform', `translate(${margin.left}, ${margin.top})`);
 
-    let xMax = Math.ceil(d3.max(filteredStats, d => d.value));
-    let xScale = d3.scaleLinear()
-        .domain([0, xMax])
-        .range([0, width]);
-    svg.append('g')
-        .attr('transform', `translate(0, ${height})`)
-        .call(d3.axisBottom(xScale));
 
-    let histogram = d3.histogram()
-        .value(d => d.value)
-        .domain(xScale.domain())
-        .thresholds(xScale.ticks(10));
+    let xAxisGroup = svg.append('g');
+    let yAxisGroup = svg.append('g');
 
-    let bins = histogram(filteredStats);
 
-    let yMax = d3.max(bins, d => d.length);
-    let yScale = d3.scaleLinear()
-        .range([height, 0])
-        .domain([0, yMax])
+    let historgramOptions = document.querySelector('#histogram_options');
+    historgramOptions.onchange = () => drawHistogram(historgramOptions.value);
 
-    svg.append('g')
-        .call(
-            d3.axisLeft(yScale)
-                .ticks(yMax)
-                .tickFormat(d3.format('d'))
-        );
+    const drawHistogram = (stat) => {
+        let filteredStats = getFiltedStatList(stat);
 
-    svg.selectAll('rect')
-        .data(bins)
-        .enter()
-        .append("rect")
-        .attr("x", 1)
-        .attr('transform', d => `translate(${xScale(d.x0)}, ${yScale(d.length)})`)
-        .attr('width', d => xScale(d.x1) - xScale(d.x0))
-        .attr('height', d => height - yScale(d.length))
-        .style('fill', '#69b3a2');
+        let xMax = Math.ceil(d3.max(filteredStats, d => d.value));
+        let xScale = d3.scaleLinear()
+            .domain([0, xMax])
+            .range([0, width]);
+
+        xAxisGroup
+            .attr('transform', `translate(0, ${height})`)
+            .transition()
+            .duration(1000)
+            .call(d3.axisBottom(xScale));
+
+        let histogram = d3.histogram()
+            .value(d => d.value)
+            .domain(xScale.domain())
+            .thresholds(xScale.ticks(10));
+
+        let bins = histogram(filteredStats);
+
+        let yMax = d3.max(bins, d => d.length);
+        let yScale = d3.scaleLinear()
+            .range([height, 0])
+            .domain([0, yMax])
+
+        yAxisGroup
+            .transition()
+            .duration(1000)
+            .call(
+                d3.axisLeft(yScale)
+                    .ticks(yMax)
+                    .tickFormat(d3.format('d'))
+            );
+
+        svg.selectAll('rect')
+            .data(bins, b => Math.random)
+            .join(
+                enter => {
+                    enter.append("rect")
+                        .attr("x", d => xScale(d.x0) + 1)
+                        .attr("y", height)
+                        .attr('width', d => Math.max(xScale(d.x1) - xScale(d.x0) - 1, 0))
+                        .attr('height', 0)
+                        .style('fill', '#69b3a2')
+                        .transition()
+                        .duration(1000)
+                        .attr('y', d => yScale(d.length))
+                        .attr('height', d => height - yScale(d.length))
+                }
+            );
+    }
+
+    drawHistogram(stat);
 }
 
 const histogramStats = {
@@ -414,11 +434,11 @@ const getFiltedStatList = (stat) => {
 
 const getPlayerStat = (playerStats, statName) => {
     let stat = playerStats.stats.find(s => s.name === statName);
-    
+
     let value = 0;
     if (stat !== undefined)
         value = parseInt(stat.value);
-    
+
     return value;
 }
 
