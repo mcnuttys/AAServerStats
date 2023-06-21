@@ -326,7 +326,7 @@ const newPlayerSummeryElement = (icon, steamprofileURL, name, playtime) => {
     return `
     <div class="row player_summary">
         <div class="one columns"><img src="${icon}" alt="username"></div>
-        <div class="nine columns"><a href="${steamprofileURL}" target="_blank">${name}</a></div>
+        <div class="nine columns"><a href="https://aastats.com/player_stats.php?guid=${name}" target="_blank">${name}</a> (<a href="${steamprofileURL}" target="_blank">profile</a>)</div>
         <div class="two columns">${playtime}</div>
     </div>`
 }
