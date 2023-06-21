@@ -1,0 +1,195 @@
+:root {
+    --transition_delay: .3s;
+}
+
+body {
+    padding-top: 2.5em;
+    overflow-x: hidden;
+}
+
+.center {
+    position: absolute;
+    left: 0%;
+    right: 0%;
+
+    transition: left var(--transition_delay), right var(--transition_delay);
+}
+
+.left {
+
+    position: absolute;
+    left: -100%;
+
+    transition: left var(--transition_delay);
+}
+
+.right {
+    position: absolute;
+    right: -100%;
+
+    transition: right var(--transition_delay);
+}
+
+#page_options {
+    margin-bottom: 1em;
+    font-size: 18pt;
+}
+
+#page_options .row {
+    text-align: center;
+}
+
+#page_options .one-third.column {
+    background-color: white;
+}
+
+#page_options .one-third.column:hover {
+    background-color: lightgray;
+}
+
+#page_options .one-third.column:active {
+    background-color: darkgray;
+}
+
+#page_options .active {
+    border-bottom: 1px solid black;
+}
+
+#servers_view {
+    display: flex;
+    justify-content: center;
+}
+
+#servers_view .row {
+    border-bottom: 1px solid black;
+}
+
+#servers_view .six.columns {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+#servers_view .four.columns {
+    text-align: right;
+}
+
+#servers_view .two.columns {
+    text-align: right;
+}
+
+#servers_view .header {
+    padding-left: 1em;
+    padding-right: 1em;
+}
+
+#servers_view .server {
+    padding: 1em;
+    background-color: white;
+}
+
+#servers_view .server:hover {
+    background-color: lightgray;
+}
+
+#servers_view .server:active {
+    background-color: darkgray;
+}
+
+#players_view .one-third.column {
+    text-align: right;
+}
+
+#players_view .header {
+    padding-left: 1em;
+    padding-right: 1em;
+    border-bottom: 1px solid black;
+}
+
+#players_view .player {
+    padding: 1em;
+    border-bottom: 1px solid black;
+}
+
+#players_view .noid {
+    color: rgb(255, 100, 100);
+}
+
+#players_view .spectator {
+    padding: 1em;
+
+    border-top: 1px solid black;
+}
+
+#players_view .two.columns {
+    text-align: right;
+}
+
+#players_view h5 {
+
+    text-align: center;
+    margin-top: 1em;
+    margin-left: 0;
+    margin-bottom: 0em;
+}
+
+#data_view .header {
+    padding-left: 1em;
+    padding-right: 1em;
+}
+
+#data_view .player_summary {
+    padding: 1em;
+    border-top: 1px solid black;
+}
+
+#data_view .two.columns {
+    text-align: right;
+}
+
+#data_view .one-third.column {
+    text-align: right;
+}
+
+.center_content {
+    display: flex;
+    justify-content: center;
+    text-align: center;
+}
+
+.loader_holder {
+    display: flex;
+    justify-content: center;
+}
+
+p {
+    text-align: center;
+}
+
+.loader {
+    margin: 1em;
+
+    /* from https://www.w3schools.com/howto/howto_css_loader.asp */
+    border: 1rem solid #f3f3f3;
+    /* Light grey */
+    border-top: 1rem solid darkgray;
+    /* Blue */
+    border-radius: 50%;
+    width: 2em;
+    height: 2em;
+    animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.hidden {
+    display: none;
+}

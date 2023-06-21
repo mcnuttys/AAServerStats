@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>AAServer Stats</title>
+    <link href="//fonts.googleapis.com/css?family=Raleway:400,300,600" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/normalize.css">
+    <link rel="stylesheet" href="css/skeleton.css">
+    <link rel="icon" type="image/png" href="/src/images/favicon.png">
+</head>
+
+<body>
+    <div class="body">
+        <div id="page_options" class="container">
+            <div class="row">
+                <div id="servers_page_option" class="one-third column active">Servers</div>
+                <div id="players_page_option" class="one-third column">Players</div>
+                <div id="data_page_option" class="one-third column">Data</div>
+            </div>
+        </div>
+        <div id="servers_view" class="center">
+            <div class="container">
+                <div class="row header">
+                    <div class="six columns">Server Name</div>
+                    <div class="four columns">Map</div>
+                    <div class="two columns">Player Count</div>
+                </div>
+                <div id="server_holder">
+
+                </div>
+                <div class="loader_holder">
+                    <div id="server_loader" class="hidden"></div>
+                </div>
+                <br>
+                <div class="center_content">
+                    <button id="server_refresh_button">Refresh</button>
+                </div>
+            </div>
+        </div>
+        <div id="players_view" class="right">
+            <div class="container">
+                <div class="row header">
+                    <div id="playerlist_server_name" class="two-thirds column">Server name</div>
+                    <div id="playerlist_server_map" class="one-third column">Map</div>
+                </div>
+                <div id="teams_holder">
+                    <div class="row">
+                        <div class="one-half column">
+                            <h5>Alpha</h5>
+                            <div class="row header">
+                                <div class="ten columns">Name</div>
+                                <div class="two columns">Score</div>
+                            </div>
+                            <div id="player_alphalist">
+                            </div>
+                        </div>
+                        <div class="one-half column">
+                            <h5>Bravo</h5>
+                            <div class="row header">
+                                <div class="ten columns">Name</div>
+                                <div class="two columns">Score</div>
+                            </div>
+                            <div id="player_bravolist">
+                            </div>
+                        </div>
+                    </div>
+                    <h5 id="player_spectators_title">Spectators</h5>
+                    <div id="player_spectatorlist">
+                    </div>
+                    <p id="noid_disclaimer" class="noid">* Player Names in red cannot have their stats retrieved</p>
+                    <p>If your stats are not visible and you want your stats to be visible, set your steam profile
+                        to public!</p>
+                </div>
+                <div class="loader_holder">
+                    <div id="player_loader" class="loader"></div>
+                </div>
+                <div class="center_content">
+                    <button id="player_refresh_button">Refresh</button>
+                </div>
+            </div>
+        </div>
+        <div id="data_view" class="right">
+            <div class="container">
+                <div id="data_holder">
+                    <div class="center_content">
+                        <h5>Player Summaries</h5>
+                    </div>
+                    <div class="container">
+                        <div class="row header">
+                            <div class="two-thirds column">Username</div>
+                            <div class="one-third column">Playtime</div>
+                        </div>
+                    </div>
+                    <div id="data_player_list" class="container">
+                    </div>
+                    <p>If your stats are not visible and you want your stats to be visible, set your steam profile to
+                        public!</p>
+                </div>
+                <div class="loader_holder">
+                    <div id="data_loader" class="loader"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="/src/script.js"></script>
+</body>
+
+</html>
