@@ -387,7 +387,7 @@ const populateStatHistogram = (stat) => {
         let histogram = d3.histogram()
             .value(d => d.value)
             .domain(xScale.domain())
-            .thresholds(xScale.ticks(10));
+            .thresholds(xScale.ticks(50));
 
         let bins = histogram(filteredStats);
 
@@ -435,7 +435,7 @@ const populateStatHistogram = (stat) => {
             let summery = playerSummeries.find(p => p.steamid === player.steamid);
             let icon = summery.avatar;
             let name = summery.personaname;
-            let stat = Math.round(player.value * 100) / 100;
+            let stat = Math.round(player.value * 1000) / 1000;
 
             playerDOM.innerHTML = newPlayerHistogramElement(icon, name, stat);
 
