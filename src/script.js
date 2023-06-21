@@ -409,7 +409,8 @@ const populateStatHistogram = (stat) => {
                         .duration(1000)
                         .attr('y', d => yScale(d.length))
                         .attr('height', d => height - yScale(d.length))
-                }
+                },
+                exit => exit.remove()
             );
     }
 
