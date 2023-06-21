@@ -213,7 +213,7 @@ const populatePlayerLists = (players) => {
 const newPlayerElementSteamID = (steamid, name, duration, score) => {
     return `
     <div id=${steamid} class="row player id">
-        <div class="ten columns"><a href="https://www.aastats.com" target="_blank">${name}</a></div>
+        <div class="ten columns"><a href="https://aastats.com/player_stats.php?guid=${name}" target="_blank">${name}</a></div>
         <div class="two columns">${score}</div>
     </div>`
 }
@@ -227,7 +227,7 @@ const newPlayerElement = (name, duration, score) => {
 }
 
 const newSpectatorElementSteamID = (steamid, name) => {
-    return `<div id=${steamid} class="row spectator id"><a href="https://www.aastats.com" target="_blank">${name}</a></div>`
+    return `<div id=${steamid} class="row spectator id"><a href="https://aastats.com/player_stats.php?guid=${name}" target="_blank">${name}</a></div>`
 }
 
 const newSpectatorElement = (name) => {
