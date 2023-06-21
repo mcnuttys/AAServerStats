@@ -253,6 +253,7 @@ const displayDataView = async (ip) => {
     playerStats = await retrievePlayerStats(ip);
 
     playerSummeries = playerSummeries.filter(p => p.communityvisibilitystate !== 2);
+    playerSummeries = playerSummeries.filter(p => playerStats.some(person => person.steamID === p.steamid));
 
     playerStats.sort((a, b) => b.playtime - a.playtime);
     playerSummeries.sort((a, b) => playerStats.find(p => p.steamID === b.steamid).playtime - playerStats.find(p => p.steamID === a.steamid).playtime);
@@ -461,6 +462,9 @@ const histogramStats = {
     'MeleeKills': (playerStats) => {
         return getPlayerStat(playerStats, 'MeleeKills');
     },
+    'KilledByRPG7': (playerStats) => {
+        return getPlayerStat(playerStats, 'KilledByRPG7');
+    }
 }
 
 const getFiltedStatList = (stat) => {
