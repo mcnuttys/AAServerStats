@@ -300,12 +300,13 @@ const populatePlayerSummeries = () => {
 const newPlayerSummeryElement = (icon, steamprofileURL, name, playtime) => {
     name = name.replaceAll('<', '&lt;');
     name = name.replaceAll('>', '&gt;');
-
+    playtime = playtime <= 0 ? '???' : `${playtime} hours`;
+    
     return `
     <div class="row player_summary">
         <div class="one columns"><img src="${icon}" alt="username"></div>
         <div class="nine columns"><a href="${steamprofileURL}" target="_blank">${name}</a></div>
-        <div class="two columns">${playtime} hours</div>
+        <div class="two columns">${playtime}</div>
     </div>`
 }
 
