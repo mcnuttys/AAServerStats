@@ -1,6 +1,5 @@
 //const base_url = "https://localhost:3000";
 const base_url = "https://aaserverstats-df8905e9512c.herokuapp.com";
-console.dir(base_url);
 
 let serverView, playerView, dataView;
 
@@ -125,7 +124,6 @@ const newServerElement = (ip, servername, map, playerCount, maxPlayers) => {
 }
 
 const clickServer = (ip) => {
-    console.log("Display players for: " + ip);
     displayPlayerList(ip);
 }
 
@@ -166,7 +164,6 @@ const displayPlayerList = async (ip) => {
     teamsHolder.className = '';
 
     currentIP = ip;
-    console.dir(players);
 }
 
 const clearPlayerLists = () => {
@@ -248,8 +245,6 @@ const displayDataView = async (ip) => {
     serversPageOption.className = 'one-third column';
     playersPageOption.className = 'one-third column';
     dataPageOption.className = 'one-third column active';
-
-    console.dir("Display player data for " + ip);
 
     dataLoader.className = "loader";
     dataHolder.className = "hidden";
