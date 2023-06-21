@@ -252,8 +252,6 @@ const displayDataView = async (ip) => {
     playerSummeries = await retrievePlayerSummeries(ip);
     playerStats = await retrievePlayerStats(ip);
 
-    console.dir(playerSummeries);
-
     playerSummeries = playerSummeries.filter(p => p.communityvisibilitystate !== 2);
 
     playerStats.sort((a, b) => b.playtime - a.playtime);
@@ -337,7 +335,7 @@ const populateStatHistogram = (stat) => {
     let region = document.querySelector('#histogram_target');
     region.removeChild(region.firstChild);
 
-    let margin = { top: 10, right: 30, bottom: 30, left: 40 };
+    let margin = { top: 10, right: 35, bottom: 35, left: 40 };
     let width = region.offsetWidth - margin.left - margin.right;
     let height = 400 - margin.top - margin.bottom;
 
@@ -349,8 +347,18 @@ const populateStatHistogram = (stat) => {
         .attr('transform', `translate(${margin.left}, ${margin.top})`);
 
 
-    let xAxisGroup = svg.append('g');
-    let yAxisGroup = svg.append('g');
+    let xAxisGroup = svg.append('g')
+    let xAxisText = svg.append('text')
+        .attr('transform', `translate(${width / 2}, ${height + 30})`)
+        .style('text-anchor', 'middle')
+
+    let yAxisGroup = svg.append('g')
+    let yAxisText = svg.append('text')
+        .attr('transform', 'rotate(-90)')
+        .attr('dy', -25)
+        .attr('dx', -(height) / 2)
+        .style('text-anchor', 'middle')
+        .text('Players');
 
     let historgramOptions = document.querySelector('#histogram_options');
 
@@ -372,6 +380,8 @@ const populateStatHistogram = (stat) => {
             .transition()
             .duration(1000)
             .call(d3.axisBottom(xScale));
+
+        xAxisText.text(`${historgramOptions.options[historgramOptions.selectedIndex].text}`);
 
         let histogram = d3.histogram()
             .value(d => d.value)
@@ -395,13 +405,13 @@ const populateStatHistogram = (stat) => {
             );
 
         svg.selectAll('rect')
-            .data(bins, b => Math.random)
+            .data(bins, d => Math.random())
             .join(
                 enter => {
                     enter.append("rect")
                         .attr("x", d => xScale(d.x0) + 1)
                         .attr("y", height)
-                        .attr('width', d => Math.max(xScale(d.x1) - xScale(d.x0) - 1, 0))
+                        .attr('width', d => xScale(d.x1) - xScale(d.x0))
                         .attr('height', 0)
                         .style('fill', '#69b3a2')
                         .on('mouseover', (m, d) => displayPlayers(d))
@@ -454,7 +464,6 @@ const histogramStats = {
 }
 
 const getFiltedStatList = (stat) => {
-    console.dir("Get Stats for: " + stat)
     let filteredStats = playerStats.map(p => {
         let steamid = p.steamID;
         let value = histogramStats[stat](p);
